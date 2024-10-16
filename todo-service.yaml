@@ -1,0 +1,13 @@
+apiVersion: apps/v1
+kind: Service
+metadata:
+  name: todo-service
+spec:
+  selector:
+    app: todo
+  ports:
+    - protocol: TCP
+      port: 5000
+      tragetPort: 5000
+  type: LoadBalancer
+  
