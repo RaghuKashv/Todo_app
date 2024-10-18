@@ -36,6 +36,6 @@ spec:
                 name: postgres-secret
                 key: POSTGRES_DB
           - name: POSTGRES_HOST
-            value: db  # Direct value for the host
+            value: db-service  # Direct value for the host
       restartPolicy: Always  # Ensures the pod is always restarted on failure
 

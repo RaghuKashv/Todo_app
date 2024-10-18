@@ -19,4 +19,23 @@ spec:
         image: daviddocker526/todo_app_web:latest  # Replace with your Docker image
         ports:
         - containerPort: 5000
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_PASSWORD
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_DB
+        - name: POSTGRES_HOST
+          value: "db-service"  # Use the name of your PostgreSQL service
       restartPolicy: Always
+
