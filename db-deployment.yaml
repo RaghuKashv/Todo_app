@@ -36,6 +36,13 @@ spec:
                 name: postgres-secret
                 key: POSTGRES_DB
           - name: POSTGRES_HOST
-            value: db-service  # Direct value for the host
-      restartPolicy: Always  # Ensures the pod is always restarted on failure
+            value: db-service
+        volumeMounts:
+        - name: postgres-storage
+          mountPath: /var/lib/postgresql/data  # Mount the volume at PostgreSQL's data directory
+      volumes:  # Correct placement for volumes
+      - name: postgres-storage
+        persistentVolumeClaim:
+          claimName: postgres-pvc  # Reference to your PVC
+      restartPolicy: Always
 
