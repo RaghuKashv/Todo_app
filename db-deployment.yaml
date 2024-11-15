@@ -37,12 +37,4 @@ spec:
                 key: POSTGRES_DB
           - name: POSTGRES_HOST
             value: db-service
-        volumeMounts:
-        - name: postgres-storage
-          mountPath: /var/lib/postgresql/data  # Mount the volume at PostgreSQL's data directory
-      volumes:  # Correct placement for volumes
-      - name: postgres-storage
-        persistentVolumeClaim:
-          claimName: postgres-pvc  # Reference to your PVC
-      restartPolicy: Always
 
