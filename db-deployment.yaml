@@ -1,50 +1,36 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: db-deployment
-  namespace: default
-  labels:
-    app: db
+  name: postgres-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: db
+      app: postgres
   template:
     metadata:
       labels:
-        app: db
+        app: postgres
     spec:
       containers:
-      - name: db
+      - name: postgres
         image: daviddocker526/postgres:latest
         ports:
         - containerPort: 5432
-        env:
-        - name: POSTGRES_USER
-          valueFrom:
-            secretKeyRef:
-              name: postgres-secret
-              key: POSTGRES_USER
-        - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: postgres-secret
-              key: POSTGRES_PASSWORD
-        - name: POSTGRES_DB
-          valueFrom:
-            secretKeyRef:
-              name: postgres-secret
-              key: POSTGRES_DB
-        - name: POSTGRES_HOST
-          value: db-service
+        envFrom:
+        - secretRef:
+            name: postgres-secret
         volumeMounts:
         - name: postgres-data
           mountPath: /var/lib/postgresql/data
-        lifecycle:
-          postStart:
-            exec:
-              command: ["sh", "-c", "rm -rf /var/lib/postgresql/data/*"]
+          subPath: data
+      initContainers:
+      - name: init-db
+        image: busybox
+        command: ["sh", "-c", "mkdir -p /var/lib/postgresql/data && chmod 700 /var/lib/postgresql/data && chown -R 1001:1001 /var/lib/postgresql/data"]
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
       volumes:
       - name: postgres-data
         persistentVolumeClaim:
