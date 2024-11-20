@@ -55,6 +55,7 @@ todo:
   ingressClassName: nginx
   ingressPath: /
   ingressPathType: Prefix
+  servicePort: 5000
 
 storageClass:
   # storageclass.yaml
