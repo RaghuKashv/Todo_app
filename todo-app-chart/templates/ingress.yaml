@@ -17,17 +17,3 @@ spec:
                 name: {{ .Values.todo.serviceName }}
                 port:
                   number: {{ .Values.todo.servicePort }}
-
-    # Conditional Path for ArgoCD if enabled
-    {{- if .Values.argocd.enabled }}
-    - http:
-        paths:
-          - path: {{ .Values.argocd.ingressPath }}
-            pathType: {{ .Values.argocd.ingressPathType }}
-            backend:
-              service:
-                name: {{ .Values.argocd.serviceName }}
-                port:
-                  number: {{ .Values.argocd.servicePort }}
-    {{- end }}
-
