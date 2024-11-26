@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.argocd.serverName }}
+  namespace: {{ .Values.argocd.serverNamespace }}
+  labels:
+    app: {{ .Values.argocd.serverName }}
+spec:
+  type: {{ .Values.argocd.serviceType }}
+  ports:
+    - port: {{ .Values.argocd.servicePort }}
+      targetPort: {{ .Values.argocd.targetPort }}
+  selector:
+    app: {{ .Values.argocd.serverName }}

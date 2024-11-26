@@ -57,6 +57,25 @@ todo:
   ingressPathType: Prefix
   servicePort: 5000
 
+# ArgoCD server configuration
+argocd:
+  serverName: argocd-server
+  serverNamespace: argocd
+  replicas: 1
+  servicePort: 80
+  targetPort: 8080
+  serviceType: ClusterIP
+
+# Ingress-Nginx configuration
+ingressNginx:
+  ingressName: ingress-nginx
+  ingressNamespace: ingress-nginx
+  replicas: 2
+  controllerServiceType: LoadBalancer
+  controllerServicePort: 80
+  ingressClass: nginx
+  sslRedirect: "false"
+
 storageClass:
   # storageclass.yaml
   name: azure-disk-sc
