@@ -47,7 +47,7 @@ todo:
   serviceName: todo-service
   servicePort: 5000
   targetPort: 5000
-  serviceType: LoadBalancer
+  serviceType: ClusterIP
 
   # ingress.yaml
   ingressName: todo-ingress
