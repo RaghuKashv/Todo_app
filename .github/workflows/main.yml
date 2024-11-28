@@ -21,7 +21,13 @@ jobs:
         echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > kubeconfig
         export KUBECONFIG=kubeconfig
 
-    # Step 3: Authenticate with ArgoCD
+    # Step 3: Install ArgoCD CLI
+    - name: Install ArgoCD CLI
+      run: |
+        curl -sSL https://github.com/argoproj/argo-cd/releases/download/v2.5.6/argocd-linux-amd64 -o /usr/local/bin/argocd
+        chmod +x /usr/local/bin/argocd
+
+    # Step 4: Authenticate with ArgoCD
     - name: Log in to ArgoCD
       run: |
         argocd login ${{ secrets.ARGOCD_SERVER }} \
@@ -29,7 +35,7 @@ jobs:
           --password ${{ secrets.ARGOCD_PASSWORD }} \
           --insecure
 
-    # Step 4: Sync the Application
+    # Step 5: Sync the Application
     - name: Sync ArgoCD Application
       run: |
         argocd app sync todo-app \
@@ -37,7 +43,7 @@ jobs:
           --username ${{ secrets.ARGOCD_USERNAME }} \
           --password ${{ secrets.ARGOCD_PASSWORD }}
 
-    # Step 5: Wait for Application to be Healthy
+    # Step 6: Wait for Application to be Healthy
     - name: Wait for Healthy Status
       run: |
         argocd app wait todo-app \
