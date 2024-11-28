@@ -12,15 +12,38 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
+      # Log in to Azure using the Azure Service Principal credentials
       - name: Log in to Azure
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      # Set up kubectl to interact with the AKS cluster
       - name: Set up kubectl
         uses: azure/setup-kubectl@v3
         with:
           version: 'latest'
 
+      # Get credentials for the AKS cluster
       - name: Get AKS Credentials
         run: az aks get-credentials --resource-group aks_raghu_rg --name Clahan-aks-Cluster
+
+      # Install ArgoCD CLI
+      - name: Install ArgoCD CLI
+        run: |
+          curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64 && chmod +x /usr/local/bin/argocd
+
+      # Log in to ArgoCD using the provided credentials
+      - name: Log in to ArgoCD
+        run: |
+          argocd login ${{ secrets.ARGOCD_SERVER }} \
+            --username ${{ secrets.ARGOCD_USERNAME }} \
+            --password ${{ secrets.ARGOCD_PASSWORD }} \
+            --insecure
+
+      # Sync an ArgoCD application (optional step)
+      - name: Sync ArgoCD Application
+        run: |
+          argocd app sync todo-app \
+            --server ${{ secrets.ARGOCD_SERVER }} \
+            --insecure
