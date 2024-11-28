@@ -1,0 +1,46 @@
+name: Deploy Todo App to AKS via ArgoCD
+
+on:
+  push:
+    branches:
+      - main # Trigger workflow on pushes to the main branch
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Check out the repository
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Step 2: Set up kubectl
+    - name: Set up kubectl
+      run: |
+        echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > kubeconfig
+        export KUBECONFIG=kubeconfig
+
+    # Step 3: Authenticate with ArgoCD
+    - name: Log in to ArgoCD
+      run: |
+        argocd login ${{ secrets.ARGOCD_SERVER }} \
+          --username ${{ secrets.ARGOCD_USERNAME }} \
+          --password ${{ secrets.ARGOCD_PASSWORD }} \
+          --insecure
+
+    # Step 4: Sync the Application
+    - name: Sync ArgoCD Application
+      run: |
+        argocd app sync todo-app \
+          --server ${{ secrets.ARGOCD_SERVER }} \
+          --username ${{ secrets.ARGOCD_USERNAME }} \
+          --password ${{ secrets.ARGOCD_PASSWORD }}
+
+    # Step 5: Wait for Application to be Healthy
+    - name: Wait for Healthy Status
+      run: |
+        argocd app wait todo-app \
+          --server ${{ secrets.ARGOCD_SERVER }} \
+          --username ${{ secrets.ARGOCD_USERNAME }} \
+          --password ${{ secrets.ARGOCD_PASSWORD }}
