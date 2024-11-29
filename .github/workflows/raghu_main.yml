@@ -22,6 +22,18 @@ jobs:
     - name: Update values.yaml file and commit if necessary
       run: |
         cd todo-app-chart
+
+        #Update Postgress Settings
+        sed -i 's/replicas: .*/replicas: 1/' values.yaml  # Update Postgres replicas
+        sed -i 's|image: daviddocker526/postgres:latest|image: daviddocker526/postgres:latest|' values.yaml  # Ensure correct Postgres image
+       
+        # Update Todo App settings
+        sed -i 's/replicas: .*/replicas: 2/' values.yaml  # Update Todo App replicas
+        sed -i 's|image: daviddocker526/todo_app_web:latest|image: daviddocker526/todo_app_web:latest|' values.yaml  # Ensure correct Todo App image
+
+        # Update Storage Class settings
+        sed -i 's|name: azure-disk-sc|name: azure-disk-sc|' values.yaml  # Ensure storage class is correctly configured
+        
         sed -i 's/replicas: .*/replicas: 4/' values.yaml  # Modify replica count
         git diff --exit-code values.yaml || ( \
           git config --global user.name 'GitHub Actions' && \
