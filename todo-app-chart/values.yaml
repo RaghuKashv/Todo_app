@@ -2,7 +2,7 @@ postgres:
   # db-deployment.yaml
   deploymentName: postgres-deployment
   appLabel: postgres
-  replicas: 1
+  replicas: 4
   containerName: postgres
   image: daviddocker526/postgres:latest
   containerPort: 5432
@@ -36,7 +36,7 @@ todo:
   # todo-deployment.yaml
   deploymentName: todo-deployment
   appLabel: todo-app
-  replicas: 3
+  replicas: 4
   containerName: todo-app
   image: daviddocker526/todo_app_web:latest
   containerPort: 5000
